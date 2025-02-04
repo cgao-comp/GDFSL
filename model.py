@@ -229,9 +229,9 @@ class GaussianDiffusionSampler(nn.Module):
         return torch.clip(x_0, 0, 10)
 
 
-class DiffusionModule_predict_X0_unsupervised(nn.Module):   
+class DiffusionModule_predict_X0_un(nn.Module):   
     def __init__(self, feature_hidden_dim=64, x_in_dim=1, feature_dim=14, pro_dyn_feature_dim=7, head=2, self_head=4):
-        super(DiffusionModule_predict_X0_unsupervised, self).__init__()
+        super(DiffusionModule_predict_X0_un, self).__init__()
         self.feature_hidden_dim = feature_hidden_dim
 
         
@@ -335,10 +335,10 @@ class DiffusionModule_predict_X0_unsupervised(nn.Module):
 
         return decoder_output
 
-class GaussianDiffusionForwardTrainer_future_unsupervised(nn.Module):
+class GaussianDiffusionForwardTrainer_future_un(nn.Module):
     def __init__(self, t_start, beta_1, beta_T, T, feature_hidden_dim):
         super().__init__()
-        self.model = DiffusionModule_predict_X0_unsupervised(feature_hidden_dim)
+        self.model = DiffusionModule_predict_X0_un(feature_hidden_dim)
         self.T = T
         self.t_start = t_start
 
@@ -412,7 +412,7 @@ class GaussianDiffusionForwardTrainer_future_unsupervised(nn.Module):
 
 
 
-class GaussianDiffusionSampler_unsupervised(nn.Module):
+class GaussianDiffusionSampler_un(nn.Module):
     def __init__(self, model, beta_1, beta_T, T, fairness=True):
         super().__init__()
         self.model = model.model
