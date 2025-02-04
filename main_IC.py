@@ -19,7 +19,7 @@ from dataReader import DataReader_snapshot
 from dataLoader import GraphData
 from torch.utils.data import DataLoader
 from model import GaussianDiffusionForwardTrainer_future, GaussianDiffusionSampler
-from model import GaussianDiffusionForwardTrainer_future_unsupervised, GaussianDiffusionSampler_unsupervised
+from model import GaussianDiffusionForwardTrainer_future_un, GaussianDiffusionSampler_un
 torch.cuda.set_device(0)
 
 
@@ -39,7 +39,7 @@ def collate_batch(batch):
     
     return [A, labels, P, x, N_nodes, influence]  
 
-def train_noise_unsupervised(train_loader, args):
+def train_noise_un(train_loader, args):
     
     args.device = 'cuda'
 
@@ -124,7 +124,7 @@ datareader_Twitter = DataReader_snapshot(all_propagation_Twitter_test,
                                 folds=10,
                                 union_graph_inf = Twitter_union_graph_inf)
 
-
+flag = True
 n_folds = 10
 for fold_id in range(n_folds):
     loaders_Twitter = []
@@ -147,18 +147,9 @@ for fold_id in range(n_folds):
 
     t_start = int(1 / 10 * args.T)  
 
-    supervised = False
-    unsupervised = True
-    assert supervised == False and unsupervised == True, 'error!'
-    
-    
-    if unsupervised == True:
-        forward_Trainner = GaussianDiffusionForwardTrainer_future_unsupervised(t_start=t_start, beta_1=args.beta_1, beta_T=args.beta_T, T=args.T, feature_hidden_dim=64).cuda()
-        sampler = GaussianDiffusionSampler_unsupervised(model=forward_Trainner, beta_1=args.beta_1, beta_T=args.beta_T, T=args.T).cuda()
-    else:
-        forward_Trainner = None
-        print('error')
-        sys.exit(1)
+    forward_Trainner = GaussianDiffusionForwardTrainer_future_un(t_start=t_start, beta_1=args.beta_1, beta_T=args.beta_T, T=args.T, feature_hidden_dim=64).cuda()
+    sampler = GaussianDiffusionSampler_un(model=forward_Trainner, beta_1=args.beta_1, beta_T=args.beta_T, T=args.T).cuda()
+
     opt = torch.optim.Adam([
         {'params': forward_Trainner.parameters(), 'lr': 0.0005},
       
@@ -166,10 +157,10 @@ for fold_id in range(n_folds):
 
     all_acc = []
     for epoch in range(args.epochs):
-        if unsupervised == True:
+        if flag == True:
             F_score_global = 0
             exe_time = 0
-            train_noise_unsupervised(loaders_Twitter[0], args)
+            train_noise_un(loaders_Twitter[0], args)
             if (epoch+1) % 1 == 0:
                 g_loss = sample_and_test(loaders_Twitter[0], args)
                 all_acc.append(g_loss)
