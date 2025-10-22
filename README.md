@@ -12,4 +12,4 @@ Due to Twitter's policy restrictions and file size upload limitations, some data
 
 ## Start
 
-main.py is the main function of the program.
+main_IC.py is the main function of the program.
