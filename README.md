@@ -1,6 +1,7 @@
 # GDFSL
 
-The code related to the paper below: A Generalized Diffusion Framework with Learnable Propagation Dynamics for Source Localization.
+The code related to the paper below: 
+Dongpeng Hou, Yuchen Wang, Chao Gao, Xianghua Li, A generalized diffusion framework with learnable propagation dynamics for source localization, The 34th International Joint Conference on Artificial Intelligence (IJCAI25), 2025, 2919-2927.
 Here we present the GDFSL based on the IC propagation model.
 
 ## Statement
